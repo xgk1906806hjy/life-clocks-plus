@@ -473,14 +473,31 @@ body.is-mirror .clock-card.afterglow .kicker {
   -webkit-backdrop-filter: blur(14px);
 }
 
+.ymd {
+  display: flex;
+  align-items: stretch;
+}
+
 .field {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 0.2rem;
-  padding: 0.65rem 1rem;
+  padding: 0.65rem 0.85rem;
   text-align: left;
-  min-width: 12.5rem;
+}
+
+.field-ymd {
+  min-width: 4.5rem;
+  border-right: 1px solid var(--line);
+}
+
+.field-ymd:last-child {
+  border-right: none;
+}
+
+#birth-year {
+  min-width: 5.2rem;
 }
 
 .label {
@@ -491,24 +508,32 @@ body.is-mirror .clock-card.afterglow .kicker {
   color: var(--ink-faint);
 }
 
-.field input[type="date"] {
+.field select {
   appearance: none;
   border: none;
   background: transparent;
   color: var(--ink);
   font: 500 1rem var(--font-body);
   outline: none;
-  padding: 0.1rem 0 0;
-}
-
-.field input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0.45;
+  padding: 0.1rem 1rem 0 0;
   cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 8px) 55%, calc(100% - 3px) 55%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  opacity: 0.95;
 }
 
-body.stage-dusk .field input[type="date"],
-body.stage-night .field input[type="date"] {
-  color-scheme: dark;
+.field select option {
+  color: #14181f;
+  background: #f7f4ef;
+}
+
+body.stage-dusk .field select,
+body.stage-night .field select,
+body[data-bg="4"] .field select,
+body[data-bg="5"] .field select {
   color: var(--ink);
 }
 
@@ -867,6 +892,14 @@ body.is-playing .caption {
   .form {
     width: 100%;
     flex-direction: column;
+  }
+
+  .ymd {
+    width: 100%;
+  }
+
+  .field-ymd {
+    flex: 1;
   }
 
   .btn {

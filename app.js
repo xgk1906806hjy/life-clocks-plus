@@ -9,7 +9,9 @@
   const BG_COUNT = 8;
 
   const form = document.getElementById("birth-form");
-  const birthInput = document.getElementById("birth-date");
+  const birthYear = document.getElementById("birth-year");
+  const birthMonth = document.getElementById("birth-month");
+  const birthDay = document.getElementById("birth-day");
   const clocks = document.getElementById("clocks");
   const caption = document.getElementById("caption");
   const nowLabel = document.getElementById("now-label");
@@ -465,7 +467,7 @@
       elapsedHours: previewHours != null ? previewHours : trueElapsedHours(),
       remainHours: Math.max(0, 24 - (previewHours != null ? previewHours : trueElapsedHours())),
       stage: stageForTime,
-      birth: birthInput.value,
+      birth: getBirthValue(),
       ageYears: age,
       wall: formatWallClock(now),
       note: noteInput.value.trim(),
@@ -1065,12 +1067,61 @@
     }
   }
 
+  function daysInMonth(year, month) {
+    return new Date(year, month, 0).getDate();
+  }
+
+  function getBirthValue() {
+    const y = birthYear.value;
+    const m = birthMonth.value;
+    const d = birthDay.value;
+    if (!y || !m || !d) return "";
+    return `${y}-${pad(Number(m))}-${pad(Number(d))}`;
+  }
+
+  function getBirthDate() {
+    const value = getBirthValue();
+    if (!value) return null;
+    const date = new Date(`${value}T12:00:00`);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function fillSelect(select, start, end, selected, padLen = 0) {
+    select.innerHTML = "";
+    for (let i = start; i <= end; i++) {
+      const opt = document.createElement("option");
+      opt.value = String(i);
+      opt.textContent = padLen ? pad(i) : String(i);
+      if (i === selected) opt.selected = true;
+      select.appendChild(opt);
+    }
+  }
+
+  function syncDayOptions() {
+    const y = Number(birthYear.value) || 2000;
+    const m = Number(birthMonth.value) || 1;
+    const maxDay = daysInMonth(y, m);
+    const current = Number(birthDay.value) || 1;
+    fillSelect(birthDay, 1, maxDay, Math.min(current, maxDay), 2);
+  }
+
+  function initBirthSelects(defaultY = 2000, defaultM = 10, defaultD = 5) {
+    const now = new Date();
+    fillSelect(birthYear, 1900, now.getFullYear(), defaultY);
+    fillSelect(birthMonth, 1, 12, defaultM, 2);
+    fillSelect(birthDay, 1, daysInMonth(defaultY, defaultM), defaultD, 2);
+  }
+
+  birthYear.addEventListener("change", syncDayOptions);
+  birthMonth.addEventListener("change", syncDayOptions);
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const value = birthInput.value;
-    if (!value) return birthInput.focus();
-    const date = new Date(`${value}T12:00:00`);
-    if (Number.isNaN(date.getTime())) return alert("请输入有效的出生日期");
+    const date = getBirthDate();
+    if (!date) {
+      birthYear.focus();
+      return alert("请选择完整的年月日");
+    }
     if (date > new Date()) return alert("未来的日子，时钟还走不到");
     if (exactAgeYears(date) > 120) return alert("超出刻度了");
     reveal(date, { playback: true });
@@ -1098,9 +1149,6 @@
   window.addEventListener("pointerup", endDrag);
   window.addEventListener("pointercancel", endDrag);
 
-  birthInput.max = new Date().toISOString().slice(0, 10);
-  birthInput.min = "1900-01-01";
-
   try {
     const saved = localStorage.getItem(NOTE_KEY);
     if (saved) {
@@ -1116,6 +1164,7 @@
   buildTicks();
   buildHourLabels();
   buildMilestones();
+  initBirthSelects(2000, 10, 5);
   soundBtn.setAttribute("aria-pressed", "false");
   resizeSeasonCanvas();
   resizeStarCanvas();
@@ -1132,6 +1181,5 @@
     spawnStars();
   });
 
-  if (!birthInput.value) birthInput.value = "2000-10-05";
-  reveal(new Date(`${birthInput.value}T12:00:00`), { playback: true });
+  reveal(getBirthDate(), { playback: true });
 })();

@@ -26,10 +26,20 @@
       <p class="lede">左边是已经走过的时辰，右边是还没散尽的余晖。</p>
 
       <form class="form" id="birth-form" autocomplete="off">
-        <label class="field">
-          <span class="label">出生日期</span>
-          <input type="date" id="birth-date" value="2000-10-05" required />
-        </label>
+        <div class="ymd" role="group" aria-label="出生年月日">
+          <label class="field field-ymd">
+            <span class="label">年</span>
+            <select id="birth-year" required></select>
+          </label>
+          <label class="field field-ymd">
+            <span class="label">月</span>
+            <select id="birth-month" required></select>
+          </label>
+          <label class="field field-ymd">
+            <span class="label">日</span>
+            <select id="birth-day" required></select>
+          </label>
+        </div>
         <button type="submit" class="btn">启动时钟</button>
       </form>
     </header>
