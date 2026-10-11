@@ -233,6 +233,235 @@ body.season-winter .bg-season {
   text-align: center;
 }
 
+/* Random background themes (override wash via data-bg) */
+body[data-bg="0"] { --sky-top: #b8d9c8; --sky-mid: #e8dcc4; --sky-bot: #f0c9a0; }
+body[data-bg="1"] { --sky-top: #6a9bc2; --sky-mid: #d4b896; --sky-bot: #c47a4a; }
+body[data-bg="2"] { --sky-top: #c4a8c8; --sky-mid: #e8c4b0; --sky-bot: #d88868; }
+body[data-bg="3"] { --sky-top: #4a7a8a; --sky-mid: #b8c8a0; --sky-bot: #e0b070; }
+body[data-bg="4"] { --sky-top: #2a3048; --sky-mid: #6a4a58; --sky-bot: #c07050; --ink: #f3ebe3; --ink-soft: rgba(243,235,227,0.72); --ink-faint: rgba(243,235,227,0.42); --line: rgba(243,235,227,0.18); --panel: rgba(255,255,255,0.08); --face: #ece6dc; --elapsed: #e2a86a; --afterglow: #8eb8c4; }
+body[data-bg="5"] { --sky-top: #1a2838; --sky-mid: #3a5068; --sky-bot: #8a7060; --ink: #ebe4da; --ink-soft: rgba(235,228,218,0.7); --ink-faint: rgba(235,228,218,0.4); --line: rgba(235,228,218,0.16); --panel: rgba(255,255,255,0.06); --face: #e8e2d8; --elapsed: #d4ae6a; --afterglow: #7aa8b6; }
+body[data-bg="6"] { --sky-top: #e8d0b0; --sky-mid: #f0b888; --sky-bot: #d06048; }
+body[data-bg="7"] { --sky-top: #88b8a8; --sky-mid: #d0c8b0; --sky-bot: #a88870; }
+
+.star-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+
+body.show-stars .star-canvas {
+  opacity: 1;
+}
+
+body.show-stars .season-canvas {
+  opacity: 0.25;
+}
+
+.progress-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 1rem auto 0.25rem;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-track {
+  fill: none;
+  stroke: rgba(20, 24, 31, 0.1);
+  stroke-width: 6;
+}
+
+body.stage-dusk .progress-track,
+body.stage-night .progress-track,
+body[data-bg="4"] .progress-track,
+body[data-bg="5"] .progress-track {
+  stroke: rgba(243, 235, 227, 0.12);
+}
+
+.progress-elapsed {
+  fill: none;
+  stroke: var(--elapsed);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 326.73;
+  stroke-dashoffset: 326.73;
+  transition: stroke-dashoffset 0.6s var(--ease);
+}
+
+.progress-remain {
+  fill: none;
+  stroke: var(--afterglow);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-dasharray: 276.46;
+  stroke-dashoffset: 276.46;
+  opacity: 0.55;
+  transition: stroke-dashoffset 0.6s var(--ease);
+}
+
+.progress-copy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.progress-pct {
+  font-family: var(--font-brand);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.progress-sub {
+  margin-top: 0.25rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+.drag-face {
+  cursor: grab;
+  touch-action: none;
+}
+
+.drag-face.is-dragging {
+  cursor: grabbing;
+}
+
+.drag-hint {
+  margin-top: 0.35rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  opacity: 0.8;
+}
+
+body.is-preview .drag-hint {
+  color: var(--elapsed);
+  opacity: 1;
+}
+
+body.is-preview .clocks {
+  outline: 1px dashed rgba(196, 92, 58, 0.25);
+  outline-offset: 8px;
+}
+
+body.is-mirror .clock-card.elapsed .kicker,
+body.is-mirror .clock-card.afterglow .kicker {
+  letter-spacing: 0.2em;
+}
+
+.poetry {
+  width: min(440px, 100%);
+  margin-top: 1.15rem;
+  padding: 1rem 1.1rem 0.85rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-align: center;
+}
+
+.poetry-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.45rem;
+}
+
+.poetry-text {
+  font-family: var(--font-brand);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.55;
+  min-height: 2.6em;
+  color: var(--ink);
+  transition: opacity 0.4s ease, transform 0.45s var(--ease), filter 0.4s ease;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.poetry-text.is-typing::after {
+  content: "";
+  display: inline-block;
+  width: 0.08em;
+  height: 1em;
+  margin-left: 0.12em;
+  background: var(--elapsed);
+  vertical-align: -0.1em;
+  animation: poetry-caret 0.85s steps(1) infinite;
+}
+
+.poetry-text.is-fading {
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(2px);
+}
+
+.poetry-text.is-holding {
+  animation: poetry-hold 3.6s ease-in-out 1;
+}
+
+@keyframes poetry-hold {
+  0%,
+  100% {
+    letter-spacing: 0.01em;
+  }
+  50% {
+    letter-spacing: 0.04em;
+  }
+}
+
+.poetry-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.55rem;
+}
+
+.poetry-refresh {
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 500 0.78rem var(--font-body);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.poetry-refresh:hover,
+.poetry-refresh[aria-pressed="true"] {
+  color: var(--elapsed);
+}
+
+@keyframes poetry-caret {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
 .form {
   display: inline-flex;
   flex-wrap: wrap;
