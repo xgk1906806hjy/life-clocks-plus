@@ -39,28 +39,39 @@ body {
   transition: color 0.8s ease, background 0.8s ease;
 }
 
-body.stage-morning {
-  --sky-top: #c9dcec;
-  --sky-mid: #e7dcc8;
-  --sky-bot: #e2b88a;
+/* Spring / morning */
+body.stage-morning,
+body.season-spring {
+  --sky-top: #b8d9c8;
+  --sky-mid: #e8dcc4;
+  --sky-bot: #f0c9a0;
+  --season-accent: rgba(120, 180, 130, 0.35);
 }
 
-body.stage-noon {
-  --sky-top: #b7d4ea;
-  --sky-mid: #f0d9a8;
-  --sky-bot: #e8a85c;
+/* Summer / noon */
+body.stage-noon,
+body.season-summer {
+  --sky-top: #7eb8e0;
+  --sky-mid: #f2d090;
+  --sky-bot: #ef9a48;
+  --season-accent: rgba(255, 200, 80, 0.35);
 }
 
-body.stage-afternoon {
-  --sky-top: #b0c2d0;
-  --sky-mid: #e3b894;
-  --sky-bot: #d07a52;
+/* Late summer → early autumn */
+body.stage-afternoon,
+body.season-late {
+  --sky-top: #9ab0c0;
+  --sky-mid: #e8b888;
+  --sky-bot: #d07040;
+  --season-accent: rgba(220, 140, 70, 0.3);
 }
 
-body.stage-dusk {
-  --sky-top: #2c3a48;
-  --sky-mid: #6a4e4a;
-  --sky-bot: #a85a3e;
+/* Autumn / dusk */
+body.stage-dusk,
+body.season-autumn {
+  --sky-top: #3a4058;
+  --sky-mid: #8a5a48;
+  --sky-bot: #c86838;
   --ink: #f3ebe3;
   --ink-soft: rgba(243, 235, 227, 0.72);
   --ink-faint: rgba(243, 235, 227, 0.42);
@@ -71,12 +82,15 @@ body.stage-dusk {
   --panel: rgba(255, 255, 255, 0.08);
   --elapsed: #e2a86a;
   --afterglow: #8eb8c4;
+  --season-accent: rgba(220, 120, 60, 0.35);
 }
 
-body.stage-night {
-  --sky-top: #121820;
-  --sky-mid: #1e2834;
-  --sky-bot: #3a3538;
+/* Winter / night */
+body.stage-night,
+body.season-winter {
+  --sky-top: #0e1620;
+  --sky-mid: #1a2838;
+  --sky-bot: #3a4555;
   --ink: #ebe4da;
   --ink-soft: rgba(235, 228, 218, 0.7);
   --ink-faint: rgba(235, 228, 218, 0.4);
@@ -86,6 +100,7 @@ body.stage-night {
   --panel: rgba(255, 255, 255, 0.06);
   --elapsed: #d4ae6a;
   --afterglow: #7aa8b6;
+  --season-accent: rgba(180, 210, 240, 0.2);
 }
 
 .bg {
@@ -100,9 +115,55 @@ body.stage-night {
   inset: 0;
   background:
     radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255, 255, 255, 0.45), transparent 55%),
-    radial-gradient(ellipse 60% 45% at 90% 80%, rgba(196, 92, 58, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 90% 80%, var(--season-accent, rgba(196, 92, 58, 0.12)), transparent 55%),
     linear-gradient(180deg, var(--sky-top), var(--sky-mid) 48%, var(--sky-bot));
-  transition: background 1.2s var(--ease);
+  transition: background 1.4s var(--ease);
+}
+
+.bg-season {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  transition: background 1.4s var(--ease), opacity 1s ease;
+  pointer-events: none;
+}
+
+body.season-spring .bg-season {
+  background:
+    radial-gradient(circle at 15% 70%, rgba(180, 220, 170, 0.35), transparent 28%),
+    radial-gradient(circle at 85% 30%, rgba(255, 200, 210, 0.22), transparent 32%);
+}
+
+body.season-summer .bg-season {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 240, 180, 0.45), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(255, 160, 60, 0.2), transparent 35%);
+}
+
+body.season-late .bg-season {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 200, 140, 0.25), transparent 40%),
+    radial-gradient(circle at 70% 90%, rgba(200, 90, 50, 0.22), transparent 40%);
+}
+
+body.season-autumn .bg-season {
+  background:
+    radial-gradient(circle at 20% 40%, rgba(255, 140, 70, 0.25), transparent 35%),
+    radial-gradient(circle at 75% 70%, rgba(160, 60, 40, 0.3), transparent 40%);
+}
+
+body.season-winter .bg-season {
+  background:
+    radial-gradient(circle at 40% 20%, rgba(180, 210, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 60% 90%, rgba(100, 130, 160, 0.25), transparent 45%);
+}
+
+.season-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
 }
 
 .bg-grain {
@@ -151,6 +212,25 @@ body.stage-night {
   color: var(--ink-soft);
   line-height: 1.6;
   margin-bottom: 1.15rem;
+}
+
+.compare {
+  margin-top: 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.season-tag {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+  text-align: center;
 }
 
 .form {
@@ -346,12 +426,61 @@ body.stage-night .btn {
   fill: var(--hand);
 }
 
+.milestone-dot {
+  fill: rgba(196, 92, 58, 0.35);
+  stroke: rgba(196, 92, 58, 0.55);
+  stroke-width: 1;
+  transition: fill 0.4s ease;
+}
+
+.milestone-dot.passed {
+  fill: #c45c3a;
+  filter: url(#glow);
+}
+
+.milestone-dot.lit {
+  fill: #ff8a4a;
+}
+
+body.stage-dusk .milestone-dot.passed,
+body.stage-night .milestone-dot.passed {
+  fill: #e2a86a;
+}
+
 .meta {
   margin-top: 0.9rem;
   font-size: 0.9rem;
   font-weight: 300;
   color: var(--ink-soft);
   min-height: 1.4em;
+}
+
+.milestone-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.65rem;
+  margin-top: 0.65rem;
+  max-width: 16rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.milestone-list li {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  padding: 0.15rem 0;
+}
+
+.milestone-list li.passed {
+  color: var(--elapsed);
+}
+
+.milestone-list li.lit {
+  color: var(--elapsed);
+  font-weight: 600;
 }
 
 .bridge {
@@ -365,6 +494,46 @@ body.stage-night .btn {
   color: var(--ink-soft);
   letter-spacing: 0.03em;
   min-height: 1.4em;
+}
+
+.note-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: min(420px, 100%);
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.note-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.note-box textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 3.2rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  font: 400 0.95rem/1.5 var(--font-body);
+  padding: 0.75rem 0.9rem;
+  outline: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.25s ease;
+}
+
+.note-box textarea:focus {
+  border-color: var(--elapsed);
+}
+
+.note-box textarea::placeholder {
+  color: var(--ink-faint);
 }
 
 .actions {

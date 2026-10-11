@@ -10,10 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="season-spring">
   <div class="bg" aria-hidden="true">
     <div class="bg-wash"></div>
+    <div class="bg-season" id="bg-season"></div>
     <div class="bg-grain"></div>
+    <canvas id="season-canvas" class="season-canvas"></canvas>
   </div>
 
   <main class="page">
@@ -31,6 +33,9 @@
       </form>
     </header>
 
+    <p class="compare" id="compare-line">现实 --:--:-- · 人生 --:--:--</p>
+    <p class="season-tag" id="season-tag">春 · 晨光初启</p>
+
     <section class="clocks" id="clocks" data-active="false" aria-live="polite">
       <article class="clock-card elapsed">
         <header class="clock-head">
@@ -40,10 +45,20 @@
 
         <div class="face-wrap">
           <svg class="face" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.2" result="b" />
+                <feMerge>
+                  <feMergeNode in="b" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
             <circle class="dial" cx="100" cy="100" r="92" />
             <circle class="dial-inner" cx="100" cy="100" r="78" />
             <g class="ticks" data-ticks="elapsed"></g>
             <g class="hours" data-hours="elapsed"></g>
+            <g id="milestones" class="milestones"></g>
             <line class="hand hour" id="elapsed-hour" x1="100" y1="100" x2="100" y2="52" />
             <line class="hand minute" id="elapsed-minute" x1="100" y1="100" x2="100" y2="36" />
             <line class="hand second" id="elapsed-second" x1="100" y1="108" x2="100" y2="28" />
@@ -52,6 +67,7 @@
         </div>
 
         <p class="meta" id="elapsed-meta">等待启程</p>
+        <ul class="milestone-list" id="milestone-list"></ul>
       </article>
 
       <div class="bridge" aria-hidden="true">
@@ -85,6 +101,11 @@
 
     <p class="caption" id="caption">输入生日，让两只钟开始走动</p>
 
+    <label class="note-box">
+      <span class="note-label">写给此刻的自己</span>
+      <textarea id="life-note" rows="2" maxlength="80" placeholder="一句留给此刻的话…"></textarea>
+    </label>
+
     <div class="actions">
       <button type="button" class="action-btn" id="sound-btn" aria-pressed="false" title="音景开关">
         <span class="action-ico" aria-hidden="true">♪</span>
@@ -99,7 +120,7 @@
     <footer class="foot">按 80 年 = 24 小时计算 · 仅本地演算</footer>
   </main>
 
-  <canvas id="share-canvas" width="1080" height="1350" hidden></canvas>
+  <canvas id="share-canvas" width="1080" height="1400" hidden></canvas>
   <script src="app.js"></script>
 </body>
 </html>
