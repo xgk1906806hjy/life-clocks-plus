@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>生命时钟 — 已行与余晖</title>
+  <meta name="description" content="将八十年映照为一天。看已行的时刻，也看见尚未散尽的余晖。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg-wash"></div>
+    <div class="bg-grain"></div>
+  </div>
+
+  <main class="page">
+    <header class="hero">
+      <p class="brand">生命时钟</p>
+      <h1 class="headline">八十载，浓缩成一天</h1>
+      <p class="lede">左边是已经走过的时辰，右边是还没散尽的余晖。</p>
+
+      <form class="form" id="birth-form" autocomplete="off">
+        <label class="field">
+          <span class="label">出生日期</span>
+          <input type="date" id="birth-date" value="2000-10-05" required />
+        </label>
+        <button type="submit" class="btn">启动时钟</button>
+      </form>
+    </header>
+
+    <section class="clocks" id="clocks" data-active="false" aria-live="polite">
+      <article class="clock-card elapsed">
+        <header class="clock-head">
+          <p class="kicker">已行</p>
+          <p class="digital" id="elapsed-digital">--:--:--</p>
+        </header>
+
+        <div class="face-wrap">
+          <svg class="face" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="dial" cx="100" cy="100" r="92" />
+            <circle class="dial-inner" cx="100" cy="100" r="78" />
+            <g class="ticks" data-ticks="elapsed"></g>
+            <g class="hours" data-hours="elapsed"></g>
+            <line class="hand hour" id="elapsed-hour" x1="100" y1="100" x2="100" y2="52" />
+            <line class="hand minute" id="elapsed-minute" x1="100" y1="100" x2="100" y2="36" />
+            <line class="hand second" id="elapsed-second" x1="100" y1="108" x2="100" y2="28" />
+            <circle class="hub" cx="100" cy="100" r="4" />
+          </svg>
+        </div>
+
+        <p class="meta" id="elapsed-meta">等待启程</p>
+      </article>
+
+      <div class="bridge" aria-hidden="true">
+        <span class="bridge-line"></span>
+        <span class="bridge-label" id="now-label">此刻</span>
+        <span class="bridge-line"></span>
+      </div>
+
+      <article class="clock-card afterglow">
+        <header class="clock-head">
+          <p class="kicker">余晖</p>
+          <p class="digital" id="afterglow-digital">--:--:--</p>
+        </header>
+
+        <div class="face-wrap">
+          <svg class="face" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="dial" cx="100" cy="100" r="92" />
+            <circle class="dial-inner" cx="100" cy="100" r="78" />
+            <g class="ticks" data-ticks="afterglow"></g>
+            <g class="hours" data-hours="afterglow"></g>
+            <line class="hand hour" id="afterglow-hour" x1="100" y1="100" x2="100" y2="52" />
+            <line class="hand minute" id="afterglow-minute" x1="100" y1="100" x2="100" y2="36" />
+            <line class="hand second" id="afterglow-second" x1="100" y1="108" x2="100" y2="28" />
+            <circle class="hub" cx="100" cy="100" r="4" />
+          </svg>
+        </div>
+
+        <p class="meta" id="afterglow-meta">余晖未至</p>
+      </article>
+    </section>
+
+    <p class="caption" id="caption">输入生日，让两只钟开始走动</p>
+
+    <div class="actions">
+      <button type="button" class="action-btn" id="sound-btn" aria-pressed="false" title="音景开关">
+        <span class="action-ico" aria-hidden="true">♪</span>
+        <span id="sound-label">开启音景</span>
+      </button>
+      <button type="button" class="action-btn" id="share-btn" title="生成分享卡">
+        <span class="action-ico" aria-hidden="true">▦</span>
+        <span>生成分享卡</span>
+      </button>
+    </div>
+
+    <footer class="foot">按 80 年 = 24 小时计算 · 仅本地演算</footer>
+  </main>
+
+  <canvas id="share-canvas" width="1080" height="1350" hidden></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
